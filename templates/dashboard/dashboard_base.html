@@ -1,0 +1,85 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+<div class="vh-100 vw-100 d-flex bg-light">
+  <!-- Sidebar -->
+  <nav
+    class="d-flex flex-column bg-dark text-white p-3 h-100"
+    style="width: 250px"
+  >
+    <h4 class="text-center mb-4">Dashboard</h4>
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a class="nav-link text-white active" href="{% url 'dashboard' %}"
+          >Dashboard</a
+        >
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-white" href="{% url 'accidents_dashboard' %}"
+          >Accident</a
+        >
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-white active" href="{% url 'cars_dashboard' %}"
+          >Cars</a
+        >
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link text-white" href="{% url 'users_dashboard' %}"
+          >Users</a
+        >
+      </li>
+    </ul>
+    <ul class="nav flex-column mt-auto">
+      <li class="nav-item">
+        <a class="nav-link text-white" href="{% url 'logout' %}">Logout</a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="flex-grow-1 p-4 overflow-auto">
+    <div
+      class="d-flex justify-content-between align-items-center pb-3 border-bottom"
+    >
+      <h1 class="h2">Dashboard</h1>
+    </div>
+
+    <!-- Cards -->
+    <div class="row mb-4">
+      <div class="col-lg-3 col-md-6">
+        <div class="card text-white bg-primary mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Registed Cars</h5>
+            <h1>100</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="card text-white bg-primary mb-3">
+          <div class="card-body">
+            <h5 class="card-title">System Users</h5>
+            <h1>10</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="card text-white bg-success mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Drivers</h5>
+            <h1>5</h1>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="card text-white bg-danger mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Accidents</h5>
+            <h1>5</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% block main %} {% endblock %}
+  </main>
+</div>
+{% endblock %}

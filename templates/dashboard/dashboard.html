@@ -1,0 +1,29 @@
+{% extends "dashboard/dashboard_base.html" %} {% load static %} {% block main %}
+
+<!-- Charts -->
+<div class="row">
+  <!-- Area Chart -->
+  <div class="col-lg-6 mb-4">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-primary text-white text-center">
+        <h5 class="mb-0">Car Overview</h5>
+      </div>
+      <div class="card-body bg-light">
+        <canvas id="areaChart"></canvas>
+      </div>
+    </div>
+  </div>
+  <!-- Bar Chart -->
+  <div class="col-lg-6 mb-4">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-danger text-white text-center">
+        <h5 class="mb-0">Accident Detected</h5>
+      </div>
+      <div class="card-body bg-light">
+        <canvas id="barChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
