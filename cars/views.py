@@ -36,7 +36,11 @@ def edit_car(request):
         car.driver_name = request.POST.get("driver_name")
         car.chassis_number = request.POST.get("chassis_number")
         car.driver_phone_number = request.POST.get("driver_phone_number")
-        car.save()
+        try:
+            car.save()
+            messages.success(request, 'Car Successfully Edited!')
+        except Exception as e:
+            messages.error(request, "Something went Wrong!")
         
         return redirect("cars_dashboard")
     

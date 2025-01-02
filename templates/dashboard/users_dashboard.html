@@ -9,7 +9,8 @@
       <button
         class="btn btn-primary"
         data-toggle="modal"
-        data-target="#registerUserModal"
+        data-target="#userModal"
+        onclick="openUserModal('add')"
       >
         <i class="fas fa-plus mr-2"></i>Register New User
       </button>
@@ -28,51 +29,31 @@
             </tr>
           </thead>
           <tbody>
+            {% for user in users %}
             <tr>
-              <th scope="row" class="text-center">1</th>
-              <td>Johnson</td>
-              <td>Doe</td>
-              <td>johndoe</td>
-              <td>johndoe@gmail.com</td>
+              <th scope="row" class="text-center">{{ forloop.counter }}</th>
+              <td>{{ user.first_name }}</td>
+              <td>{{ user.last_name }}</td>
+              <td>{{ user.username }}</td>
+              <td>{{ user.email }}</td>
               <td class="text-center">
-                <button class="btn btn-sm btn-warning">
+                <button
+                  class="btn btn-sm btn-warning"
+                  data-toggle="modal"
+                  data-target="#userModal"
+                  onclick="openUserModal('edit', '{{ user.id }}', '{{ user.first_name }}', '{{ user.last_name }}', '{{ user.username }}', '{{ user.email }}')"
+                >
                   <i class="fas fa-edit"></i> Edit
                 </button>
-                <button class="btn btn-sm btn-danger">
+                <a
+                  href="{% url 'delete_user' user.id %}"
+                  class="btn btn-sm btn-danger"
+                >
                   <i class="fas fa-trash"></i> Delete
-                </button>
+                </a>
               </td>
             </tr>
-            <tr>
-              <th scope="row" class="text-center">2</th>
-              <td>Jane</td>
-              <td>Smith</td>
-              <td>janesmith</td>
-              <td>janesmith@gmail.com</td>
-              <td class="text-center">
-                <button class="btn btn-sm btn-warning">
-                  <i class="fas fa-edit"></i> Edit
-                </button>
-                <button class="btn btn-sm btn-danger">
-                  <i class="fas fa-trash"></i> Delete
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row" class="text-center">3</th>
-              <td>Mike</td>
-              <td>Johnson</td>
-              <td>johnsonmike</td>
-              <td>johnsonmike@gmail.com</td>
-              <td class="text-center">
-                <button class="btn btn-sm btn-warning">
-                  <i class="fas fa-edit"></i> Edit
-                </button>
-                <button class="btn btn-sm btn-danger">
-                  <i class="fas fa-trash"></i> Delete
-                </button>
-              </td>
-            </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
@@ -80,20 +61,18 @@
   </div>
 </div>
 
-<!-- Modal for Register New User -->
+<!-- Modal for Register/Edit User -->
 <div
   class="modal fade"
-  id="registerUserModal"
+  id="userModal"
   tabindex="-1"
-  aria-labelledby="registerUserModalLabel"
+  aria-labelledby="userModalLabel"
   aria-hidden="true"
 >
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title" id="registerUserModalLabel">
-          Register New User
-        </h5>
+        <h5 class="modal-title" id="userModalLabel">Register New User</h5>
         <button
           type="button"
           class="close text-white"
@@ -103,7 +82,9 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form>
+      <form action="" method="POST" id="userForm">
+        {% csrf_token %}
+        <input type="hidden" name="user_id" id="userId" />
         <div class="modal-body">
           <div class="form-group">
             <label for="firstName">First Name</label>
@@ -111,6 +92,7 @@
               type="text"
               class="form-control"
               id="firstName"
+              name="firstname"
               placeholder="Enter First Name"
               required
             />
@@ -121,6 +103,7 @@
               type="text"
               class="form-control"
               id="lastName"
+              name="lastname"
               placeholder="Enter Last Name"
               required
             />
@@ -131,6 +114,7 @@
               type="text"
               class="form-control"
               id="username"
+              name="username"
               placeholder="Enter Username"
               required
             />
@@ -141,6 +125,7 @@
               type="email"
               class="form-control"
               id="email"
+              name="email"
               placeholder="Enter Email"
               required
             />
@@ -151,8 +136,18 @@
               type="password"
               class="form-control"
               id="password"
+              name="password"
               placeholder="Enter Password"
-              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="confirm_password">Confirm Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="confirm_password"
+              name="confirm_password"
+              placeholder="Confirm Password"
             />
           </div>
         </div>
@@ -160,7 +155,9 @@
           <button type="button" class="btn btn-secondary" data-dismiss="modal">
             Close
           </button>
-          <button type="submit" class="btn btn-primary">Register</button>
+          <button type="submit" class="btn btn-primary" id="modalSubmitButton">
+            Register
+          </button>
         </div>
       </form>
     </div>
