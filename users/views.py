@@ -3,6 +3,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.decorators import login_required
 
 
 User = get_user_model()
@@ -22,12 +23,12 @@ def login_page(request):
             return render(request, 'users/login.html')
     messages.error(request, "Wrong Credentials")
     return render(request, "users/login.html")
-
+@login_required
 def logout_view(request):
     logout(request)
     messages.success(request, "Logout Successfully!")
     return redirect("home")
-
+@login_required
 def register_user_view(request):
     if request.method == "POST":
         firstname = request.POST.get('firstname')
@@ -66,7 +67,7 @@ def register_user_view(request):
             return redirect('users_dashboard')
 
     return redirect('users_dashboard')
-
+@login_required
 def edit_user(request):
     if request.method == "POST":
         user_id = request.POST.get("user_id")
@@ -89,7 +90,8 @@ def edit_user(request):
             messages.error(request, f"Something went wrong {e}")
             return redirect('users_dashboard')
         return redirect("users_dashboard")
-    
+
+@login_required   
 def delete_user_view(request, user_id):
     user = get_object_or_404(User, id=user_id)
     try:
