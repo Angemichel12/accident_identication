@@ -203,5 +203,34 @@
         }, 3000);
       });
     </script>
+    <script>
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+
+            // Send the location to the backend
+            fetch("/save-location/", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}",
+              },
+              body: JSON.stringify({ latitude, longitude }),
+            }).then((response) => {
+              if (response.ok) {
+                console.log("Location saved!");
+              }
+            });
+          },
+          (error) => {
+            console.error("Error fetching location:", error);
+          }
+        );
+      } else {
+        alert("Geolocation is not supported by this browser.");
+      }
+    </script>
   </body>
 </html>
