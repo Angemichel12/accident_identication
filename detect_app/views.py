@@ -2,6 +2,7 @@ from django.shortcuts import render
 from cars.models import Car
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from accident.models import Accident
 
 User = get_user_model()
 
@@ -13,7 +14,10 @@ def dashboard_page (request):
     return render(request, 'dashboard/dashboard.html',)
 @login_required
 def accidents_page(request):
-    return render(request, 'dashboard/accidents_dashboard.html')
+    accidents = Accident.objects.all()
+    context = {
+        'accidents':accidents,}
+    return render(request, 'dashboard/accidents_dashboard.html', context)
 @login_required
 def cars_page (request):
     cars = Car.objects.all()

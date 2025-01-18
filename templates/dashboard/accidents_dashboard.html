@@ -21,45 +21,21 @@
             </tr>
           </thead>
           <tbody>
+            {% for accident in accidents %}
             <tr>
-              <th scope="row" class="text-center">1</th>
-              <td>RAA 990D</td>
-              <td>John Doe</td>
-              <td>12-Dec-2024</td>
-              <td>10.098989</td>
-              <td>-30.098989</td>
+              <th scope="row" class="text-center">{{ forloop.counter }}</th>
+              <td>{{ accident.car.plate_number }}</td>
+              <td>{{ accident.car.driver_name }}</td>
+              <td>{{ accident.created_at }}</td>
+              <td>{{ accident.longitude }}</td>
+              <td>{{ accident.latitude }}</td>
               <td class="text-center">
                 <button class="btn btn-sm btn-primary">
                   <i class="fas fa-edit"></i> Details
                 </button>
               </td>
             </tr>
-            <tr>
-              <th scope="row" class="text-center">1</th>
-              <td>RAA 990D</td>
-              <td>John Doe</td>
-              <td>12-Dec-2024</td>
-              <td>10.098989</td>
-              <td>-30.098989</td>
-              <td class="text-center">
-                <button class="btn btn-sm btn-primary">
-                  <i class="fas fa-edit"></i> Details
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row" class="text-center">1</th>
-              <td>RAA 990D</td>
-              <td>John Doe</td>
-              <td>12-Dec-2024</td>
-              <td>10.098989</td>
-              <td>-30.098989</td>
-              <td class="text-center">
-                <button class="btn btn-sm btn-primary">
-                  <i class="fas fa-edit"></i> Details
-                </button>
-              </td>
-            </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
