@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'detect_app',
     'users',
     'cars',
+    'accident',
 ]
 
 MIDDLEWARE = [

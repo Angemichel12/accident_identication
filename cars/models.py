@@ -1,7 +1,7 @@
 from django.db import models
 
 class Car(models.Model):
-    plate_number = models.CharField(max_length=8)
+    plate_number = models.CharField(max_length=10)
     driver_name = models.CharField(max_length=50)
     driver_phone_number = models.CharField(max_length=15, null=True, blank=True)
     chassis_number = models.CharField(max_length=50, null=True, blank=True)
