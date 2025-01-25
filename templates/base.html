@@ -92,24 +92,24 @@
     ></script>
 
     <script>
-      // Example Charts
+      // Data from the backend
+      const accidentData = {{ accident_data|safe }};
+      const carData = {{ car_data|safe }};
+
+      // Safeguard to avoid JSON.parse errors
+      const accidentParsed = accidentData ? accidentData : { labels: [], data: [] };
+      const carParsed = carData ? carData : { labels: [], data: [] };
+
+      // Line chart for car registrations
       const areaCtx = document.getElementById("areaChart").getContext("2d");
       new Chart(areaCtx, {
         type: "line",
         data: {
-          labels: [
-            "Mar 1",
-            "Mar 3",
-            "Mar 5",
-            "Mar 7",
-            "Mar 9",
-            "Mar 11",
-            "Mar 13",
-          ],
+          labels: carParsed.labels,
           datasets: [
             {
-              label: "Example Dataset",
-              data: [10000, 20000, 15000, 25000, 20000, 30000, 40000],
+              label: "Cars Registered",
+              data: carParsed.data,
               borderColor: "rgba(0, 123, 255, 1)",
               backgroundColor: "rgba(0, 123, 255, 0.2)",
               fill: true,
@@ -118,21 +118,23 @@
         },
       });
 
+      // Bar chart for accidents detected
       const barCtx = document.getElementById("barChart").getContext("2d");
       new Chart(barCtx, {
         type: "bar",
         data: {
-          labels: ["January", "February", "March", "April", "May", "June"],
+          labels: accidentParsed.labels,
           datasets: [
             {
-              label: "Example Dataset",
-              data: [5000, 10000, 7500, 12500, 15000, 20000],
-              backgroundColor: "rgba(0, 123, 255, 1)",
+              label: "Accidents Detected",
+              data: accidentParsed.data,
+              backgroundColor: "rgba(220, 53, 69, 1)",
             },
           ],
         },
       });
     </script>
+
     <script>
       function openCarModal(
         mode,

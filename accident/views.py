@@ -55,30 +55,40 @@ def record_data(request):
             # Log or process the received data
             print(f"Impact: {impact} m/s²")
             print(f"Tilt: X={tilt_x}° Y={tilt_y}° Z={tilt_z}°")
-            print(f"Location: Latitude--={latitude}, Longitude--={longitude}")
+            print(f"Location: Latitude={latitude}, Longitude={longitude}")
             print(f"Plate Number: {plate_number}")
-            if latitude is not None and longitude is not None:
-                print(f"Location: Latitude={latitude}, Longitude={longitude}")
-            else:
-                print("Location: GPS data not available")
+
+            # Check if the car exists
             try:
                 car = Car.objects.get(plate_number=plate_number)
-            except Exception as e:
-                print(f"Error: {str(e)}")
-            
-            if car is None:
+            except Car.DoesNotExist:
                 print(f"Car with plate number {plate_number} not found")
-            try:
-            
-                accident =  Accident.objects.create(impact=impact, tilt_x=tilt_x, tilt_y=tilt_y, latitude=latitude, longitude=longitude, car=car)
-                send_sms()
-                print(f"Accident recorded: {accident}")
-            except Exception as e:
-                print(f"Error: {str(e)}")
-            # Optionally, save the data to a database (not implemented in this example)
-            # Example: AccidentData.objects.create(impact=impact, tilt_x=tilt_x, ...)
+                send_sms(f"Accident detected! Unknown car with plate number: {plate_number}. Location: https://maps.google.com/?q={latitude},{longitude}")
+                return JsonResponse({"error": "Car not found"}, status=404)
 
-            return JsonResponse({"message": "Data received successfully!"})
+            # Get driver information
+            driver = car.driver if hasattr(car, 'driver') else "Unknown driver"
+
+            # Record the accident
+            accident = Accident.objects.create(
+                impact=impact,
+                tilt_x=tilt_x,
+                tilt_y=tilt_y,
+                tilt_z=tilt_z,
+                latitude=latitude,
+                longitude=longitude,
+                car=car
+            )
+            
+            # Send SMS notification
+            message = (
+                f"Accident detected! Plate: {plate_number}, Driver: {driver}. "
+                f"Location: https://maps.google.com/?q={latitude},{longitude}"
+            )
+            send_sms(message)
+
+            print(f"Accident recorded: {accident}")
+            return JsonResponse({"message": "Accident recorded successfully!"})
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON format"}, status=400)
         except Exception as e:

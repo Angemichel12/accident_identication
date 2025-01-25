@@ -1,13 +1,27 @@
-import africastalking
+# utils.py
+from twilio.rest import Client
+from django.conf import settings
 
-username = "sandbox"  # Your Africa's Talking username
-api_key = "atsk_708328d111f0e8fcc9153fd82bc9f25094dbaa111570fcceba2b9bd54a136fc2e9dfa80a"    # Your Africa's Talking API key
-africastalking.initialize(username, api_key)
-sms = africastalking.SMS
+def send_sms(message):
+    """
+    Sends an SMS using Twilio.
 
-def send_sms():
-    response = sms.send(
-        message="Hello, this is a test SMS!",
-        recipients=["+250783327944"],  # Any phone number
-    )
-    print(response)
+    :param to_phone: Recipient's phone number in international format (e.g., +250xxxxxxxxx).
+    :param message: Message content to send.
+    :return: Response from Twilio API.
+    """
+    try:
+        # Twilio client
+        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+        
+        # Send the SMS
+        response = client.messages.create(
+            body=message,
+            from_=settings.TWILIO_PHONE_NUMBER,
+            to="+250790005804"
+        )
+        print("responste", response)
+        return response
+    except Exception as e:
+        print(f"Error sending SMS: {e}")
+        return None
