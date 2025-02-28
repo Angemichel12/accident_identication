@@ -4,6 +4,7 @@ import json
 from .models import Accident
 from cars.models import Car
 from .send_sms import send_sms
+from django.core.exceptions import ObjectDoesNotExist
 
 # Global variable to store the last known location
 last_known_location = {"latitude": None, "longitude": None}
@@ -61,24 +62,47 @@ def record_data(request):
                 print(f"Location: Latitude={latitude}, Longitude={longitude}")
             else:
                 print("Location: GPS data not available")
-            try:
-                car = Car.objects.get(plate_number=plate_number)
-            except Exception as e:
-                print(f"Error: {str(e)}")
-            
-            if car is None:
-                print(f"Car with plate number {plate_number} not found")
-            try:
-            
-                accident =  Accident.objects.create(impact=impact, tilt_x=tilt_x, tilt_y=tilt_y, latitude=latitude, longitude=longitude, car=car)
-                send_sms(f"Accident detected! car with plate number: {plate_number}. Location: https://maps.google.com/?q={latitude},{longitude}")
-                print(f"Accident recorded: {accident}")
-            except Exception as e:
-                print(f"Error: {str(e)}")
-            # Optionally, save the data to a database (not implemented in this example)
-            # Example: AccidentData.objects.create(impact=impact, tilt_x=tilt_x, ...)
 
-            return JsonResponse({"message": "Data received successfully!"})
+            try:
+                # Fetch the car object
+                car = Car.objects.get(plate_number=plate_number)
+            except ObjectDoesNotExist:
+                print(f"Car with plate number {plate_number} not found")
+                return JsonResponse({"error": f"Car with plate number {plate_number} not found."}, status=404)
+            except Exception as e:
+                print(f"Error: {str(e)}")
+                return JsonResponse({"error": "Internal server error while fetching car details."}, status=500)
+
+            try:
+                # Create an accident record
+                accident = Accident.objects.create(
+                    impact=impact,
+                    tilt_x=tilt_x,
+                    tilt_y=tilt_y,
+                    tilt_z=tilt_z,
+                    latitude=latitude,
+                    longitude=longitude,
+                    car=car
+                )
+                print(f"Accident recorded: {accident}")
+
+                # Send SMS notification only if data is saved successfully
+                if latitude and longitude:
+                    send_sms(
+                        f"Accident detected! Car with plate number: {plate_number}. "
+                        f"Location: https://maps.google.com/?q={latitude},{longitude}"
+                    )
+                else:
+                    send_sms(
+                        f"Accident detected! Car with plate number: {plate_number}. "
+                        "Location data not available."
+                    )
+
+                return JsonResponse({"message": "Data received and saved successfully!"})
+            except Exception as e:
+                print(f"Error: {str(e)}")
+                return JsonResponse({"error": "Internal server error while saving accident data."}, status=500)
+
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON format"}, status=400)
         except Exception as e:
