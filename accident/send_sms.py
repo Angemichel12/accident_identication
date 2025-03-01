@@ -18,7 +18,7 @@ def send_sms(message):
         response = client.messages.create(
             body=message,
             from_=settings.TWILIO_PHONE_NUMBER,
-            to="+250783327944"
+            to="+250790005804"
         )
         print("responste", response.status)
         return response
