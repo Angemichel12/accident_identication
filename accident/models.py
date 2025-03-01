@@ -6,10 +6,18 @@ class Accident(models.Model):
     impact = models.DecimalField(max_digits=5, decimal_places=2)
     tilt_x = models.CharField(max_length=10)
     tilt_y = models.CharField(max_length=10)
-    latitude = models.DecimalField(max_digits=15, decimal_places=12)
-    longitude = models.DecimalField(max_digits=15, decimal_places=12)
+    latitude = models.DecimalField(max_digits=10, decimal_places=7)
+    longitude = models.DecimalField(max_digits=10, decimal_places=7)
     created_at = models.DateTimeField(auto_now_add=True)
     
 
     def __str__(self):
         return f"Accident at {self.latitude}, {self.longitude}"
+    
+class Location(models.Model):
+    latitude = models.DecimalField(max_digits=10, decimal_places=7)
+    longitude = models.DecimalField(max_digits=10, decimal_places=7)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"Location: {self.latitude}, {self.longitude}"

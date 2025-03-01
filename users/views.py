@@ -19,7 +19,7 @@ def login_page(request):
             messages.success(request, 'Login successfully!')
             return redirect('dashboard')
         else:
-            messages.error('Wrong Credentials!')
+            messages.error(request, 'Wrong Credentials!')
             return render(request, 'users/login.html')
     messages.error(request, "Wrong Credentials")
     return render(request, "users/login.html")
